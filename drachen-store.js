@@ -324,7 +324,7 @@ async function importarCSV(inputId, storageKey, mapFunc, refreshFunc) {
     refreshFunc();
 
   };
-  reader.readAsText(file);
+  reader.readAsText(file, 'UTF-8');
 }
 
 // Mapeadores específicos por entidad
