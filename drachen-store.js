@@ -206,6 +206,14 @@ async function cargarHorarios() {
   });
 }
 
+async function sobrescribirDatos(coleccion, registros, claveUnica) {
+  const ops = registros.map(reg => {
+    const docId = reg[claveUnica];
+    return setDoc(doc(db, coleccion, docId), reg);
+  });
+  await Promise.all(ops);
+}
+
 // ===== Dashboard =====
 async function actualizarDashboard() {
   const ventas = await getDatos('ventas');
@@ -320,7 +328,7 @@ async function importarCSV(inputId, storageKey, mapFunc, refreshFunc) {
     const lines = text.trim().split('\n');
     const registros = lines.slice(1).map(line => mapFunc(line.split(',')));
 
-    await agregarMultiples(storageKey, registros);
+    await sobrescribirDatos(storageKey, registros, 'fecha');
     refreshFunc();
 
   };
