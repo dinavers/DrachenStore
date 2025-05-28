@@ -315,7 +315,7 @@ async function importarCSV(inputId, storageKey, mapFunc, refreshFunc) {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = async function(e) {
     const text = e.target.result;
     const lines = text.trim().split('\n');
     const registros = lines.slice(1).map(line => mapFunc(line.split(',')));
