@@ -9,7 +9,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyD8gt7w3TqjWaQnjb5RA1GUXvMCaz_aWtE",
   authDomain: "drachen-store.firebaseapp.com",
   projectId: "drachen-store",
-  storageBucket: "drachen-store.firebasestorage.app",
+  storageBucket: "drachen-store.appspot.com",
   messagingSenderId: "640216157217",
   appId: "1:640216157217:web:b8f3737160fdd94cc9e760"
 };
