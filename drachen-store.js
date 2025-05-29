@@ -80,7 +80,13 @@ function existeRegistro(data, fecha) {
 }
 
 function ordenarPorFechaDesc(data) {
-  return data.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+  return data.sort((a, b) => {
+  const [ay, am, ad] = a.fecha.split('-').map(Number);
+  const [by, bm, bd] = b.fecha.split('-').map(Number);
+  const fa = new Date(ay, am - 1, ad);
+  const fb = new Date(by, bm - 1, bd);
+  return fb - fa;
+});
 }
 
 // ===== Ventas =====
