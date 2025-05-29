@@ -80,15 +80,22 @@
           <button type="submit" class="btn btn-primary w-100">Guardar Ventas</button>
         </div>
       </form>
-      <div class="row mb-2">
-  <div class="col-md-3">
-    <label for="filter-days-sales" class="form-label">Mostrar últimos días</label>
-    <input type="number" id="filter-days-sales" class="form-control" value="7" min="0">
-  </div>
-  <div class="col-md-3 align-self-end">
-    <button id="apply-filter-sales" class="btn btn-secondary">Filtrar</button>
-  </div>
-</div>
+      <div class="row mb-3 align-items-end">
+        <div class="col-md-3">
+          <label for="filter-date-from-sales" class="form-label text-white">Desde</label>
+          <input type="date" id="filter-date-from-sales" class="form-control bg-white text-dark border">
+        </div>
+        <div class="col-md-3">
+          <label for="filter-date-to-sales" class="form-label text-white">Hasta</label>
+          <input type="date" id="filter-date-to-sales" class="form-control bg-white text-dark border">
+        </div>
+        <div class="col-md-2">
+          <button id="apply-filter-sales" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button id="reset-filter-sales" class="btn btn-outline-secondary">Limpiar filtro</button>
+        </div>
+      </div>
       <div class="table-responsive">
         <table class="table table-dark table-striped">
           <thead>
@@ -141,16 +148,35 @@
 
     <!-- Movimientos -->
     <section id="movimientos" class="mb-5">
-  <h2 class="mb-3">Movimientos</h2>
-  <div class="card card-summary p-3">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <h5 class="mb-0">Resumen de Movimiento</h5>
-      <button id="toggle-period" class="btn btn-outline-light btn-sm">Ver Mensual</button>
+      <h2 class="mb-3">Movimientos</h2>
+
+      <div class="card card-summary p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="mb-0">Resumen de Movimiento</h5>
+          <button id="toggle-period" class="btn btn-outline-light btn-sm">Ver Mensual</button>
+        </div>
+
+        <div class="row mb-3 align-items-end">
+          <div class="col-md-3">
+            <label for="filter-date-from-summary" class="form-label text-white">Desde</label>
+            <input type="date" id="filter-date-from-summary" class="form-control bg-white text-dark border">
+          </div>
+          <div class="col-md-3">
+            <label for="filter-date-to-summary" class="form-label text-white">Hasta</label>
+            <input type="date" id="filter-date-to-summary" class="form-control bg-white text-dark border">
+          </div>
+          <div class="col-md-2">
+            <button id="apply-filter-summary" class="btn btn-primary w-100">Filtrar</button>
+          </div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <button id="reset-filter-summary" class="btn btn-outline-secondary">Limpiar filtro</button>
+          </div>
+        </div>
+
+      <canvas id="movimientos-chart" height="100"></canvas>
+      <p id="rango-fechas" class="mt-3 text-white small"></p>
     </div>
-    <canvas id="movimientos-chart" height="100"></canvas>
-    <p id="rango-fechas" class="mt-3 text-white small"></p>
-  </div>
-</section>
+  </section>
 
     <!-- Horarios -->
     <section id="vendedoras" class="mb-5">
@@ -163,11 +189,23 @@
         <div class="col-12"><button type="submit" class="btn btn-warning w-100">Guardar Horario</button></div>
       </form>
 
-      <div class="row mb-3">
-        <div class="col-md-3"><label for="filter-days-schedule" class="form-label">Mostrar últimos días</label>
-        <input id="filter-days-schedule" type="number" class="form-control" value="7" min="0"></div>
-        <div class="col-md-3 align-self-end"><button id="apply-filter-schedule" class="btn btn-secondary">Filtrar</button></div>
+      <div class="row mb-3 align-items-end">
+        <div class="col-md-3">
+          <label for="filter-date-from-schedule" class="form-label text-white">Desde</label>
+          <input type="date" id="filter-date-from-schedule" class="form-control bg-white text-dark border">
+        </div>
+        <div class="col-md-3">
+          <label for="filter-date-to-schedule" class="form-label text-white">Hasta</label>
+          <input type="date" id="filter-date-to-schedule" class="form-control bg-white text-dark border">
+        </div>
+        <div class="col-md-2">
+          <button id="apply-filter-schedule" class="btn btn-primary w-100">Filtrar</button>
+        </div>
+        <div class="col-md-4 d-flex justify-content-end">
+          <button id="reset-filter-schedule" class="btn btn-outline-secondary">Limpiar filtro</button>
+        </div>
       </div>
+      
       <div class="table-responsive">
         <table class="table table-dark table-striped">
           <thead>
