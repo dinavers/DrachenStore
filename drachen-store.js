@@ -1,4 +1,3 @@
-
 /* ===== Firebase Setup ===== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import {
@@ -31,7 +30,6 @@ async function agregarMultiples(coleccion, objetos) {
   const ops = objetos.map(obj => addDoc(collection(db, coleccion), obj));
   await Promise.all(ops);
 }
-
 
 // =====================
 // DRACHEN STORE - JS
@@ -245,48 +243,71 @@ async function actualizarDashboard() {
 }
 
 // ===== Filtros =====
-document.getElementById('apply-filter-sales').addEventListener('click', async function() {
-  const dias = parseInt(document.getElementById('filter-days-sales').value);
+document.getElementById('apply-filter-sales').addEventListener('click', async function () {
+  const desdeStr = document.getElementById('filter-date-from-sales').value;
+  const hastaStr = document.getElementById('filter-date-to-sales').value;
   const ventas = await getDatos('ventas');
   const tbody = document.getElementById('sales-table-body');
   tbody.innerHTML = '';
 
-  const fechaLimite = new Date();
-  fechaLimite.setDate(fechaLimite.getDate() - dias);
+  const desde = desdeStr ? new Date(...desdeStr.split('-').map((v, i) => i === 1 ? +v - 1 : +v)) : null;
+  const hasta = hastaStr ? new Date(...hastaStr.split('-').map((v, i) => i === 1 ? +v - 1 : +v)) : null;
 
-  ordenarPorFechaDesc(
-  ventas.filter(v => dias === 0 || new Date(v.fecha) >= fechaLimite)
-).forEach(v => {
-  tbody.innerHTML += `<tr>
-    <td>${formatearFecha(v.fecha)}</td>
-    <td>$${v.oeste.toLocaleString('es-CL')}</td>
-    <td>$${v.puente.toLocaleString('es-CL')}</td>
-    <td>$${v.sur.toLocaleString('es-CL')}</td>
-  </tr>`;
-});
+  const filtradas = ventas.filter(v => {
+    const [y, m, d] = v.fecha.split('-').map(Number);
+    const fecha = new Date(y, m - 1, d);
+    return (!desde || fecha >= desde) && (!hasta || fecha <= hasta);
+  });
+
+  ordenarPorFechaDesc(filtradas).forEach(v => {
+    tbody.innerHTML += `<tr>
+      <td>${formatearFecha(v.fecha)}</td>
+      <td>$${v.oeste.toLocaleString('es-CL')}</td>
+      <td>$${v.puente.toLocaleString('es-CL')}</td>
+      <td>$${v.sur.toLocaleString('es-CL')}</td>
+    </tr>`;
+  });
 });
 
-document.getElementById('apply-filter-schedule').addEventListener('click', async function() {
-  const dias = parseInt(document.getElementById('filter-days-schedule').value);
+  document.getElementById('reset-filter-sales').addEventListener('click', async function () {
+  document.getElementById('filter-date-from-sales').value = '';
+  document.getElementById('filter-date-to-sales').value = '';
+
+  await cargarVentas(); // vuelve a cargar los últimos 7 días
+});
+
+document.getElementById('apply-filter-schedule').addEventListener('click', async function () {
+  const desdeStr = document.getElementById('filter-date-from-schedule').value;
+  const hastaStr = document.getElementById('filter-date-to-schedule').value;
   const horarios = await getDatos('horarios');
   const tbody = document.getElementById('schedule-table-body');
   tbody.innerHTML = '';
 
-  const fechaLimite = new Date();
-  fechaLimite.setDate(fechaLimite.getDate() - dias);
+  const desde = desdeStr ? new Date(...desdeStr.split('-').map((v, i) => i === 1 ? +v - 1 : +v)) : null;
+  const hasta = hastaStr ? new Date(...hastaStr.split('-').map((v, i) => i === 1 ? +v - 1 : +v)) : null;
 
-  ordenarPorFechaDesc(
-  horarios.filter(h => dias === 0 || new Date(h.fecha) >= fechaLimite)
-).forEach(h => {
-  const diaSemana = new Date(h.fecha).toLocaleDateString('es-ES', { weekday: 'long' });
-  tbody.innerHTML += `<tr>
-    <td>${formatearFecha(h.fecha)}</td>
-    <td>${diaSemana}</td>
-    <td>${h.oeste}</td>
-    <td>${h.puente}</td>
-    <td>${h.sur}</td>
-  </tr>`;
+  const filtrados = horarios.filter(h => {
+    const [y, m, d] = h.fecha.split('-').map(Number);
+    const fecha = new Date(y, m - 1, d);
+    return (!desde || fecha >= desde) && (!hasta || fecha <= hasta);
+  });
+
+  ordenarPorFechaDesc(filtrados).forEach(h => {
+    const diaSemana = new Date(h.fecha).toLocaleDateString('es-ES', { weekday: 'long' });
+    tbody.innerHTML += `<tr>
+      <td>${formatearFecha(h.fecha)}</td>
+      <td>${diaSemana}</td>
+      <td>${h.oeste}</td>
+      <td>${h.puente}</td>
+      <td>${h.sur}</td>
+    </tr>`;
+  });
 });
+
+document.getElementById('reset-filter-schedule').addEventListener('click', async function () {
+  document.getElementById('filter-date-from-schedule').value = '';
+  document.getElementById('filter-date-to-schedule').value = '';
+  await cargarHorarios(); // vuelve a mostrar los últimos 7 días
 });
 
 document.getElementById('apply-filter-expenses').addEventListener('click', async function () {
@@ -316,6 +337,18 @@ document.getElementById('apply-filter-expenses').addEventListener('click', async
       <td>$${g.monto.toLocaleString('es-CL')}</td>
     </tr>`;
   });
+});
+
+document.getElementById('apply-filter-summary').addEventListener('click', () => {
+  const desdeStr = document.getElementById('filter-date-from-summary').value;
+  const hastaStr = document.getElementById('filter-date-to-summary').value;
+  actualizarGraficoMovimientos(desdeStr, hastaStr);
+});
+
+document.getElementById('reset-filter-summary').addEventListener('click', () => {
+  document.getElementById('filter-date-from-summary').value = '';
+  document.getElementById('filter-date-to-summary').value = '';
+  actualizarGraficoMovimientos(); // últimos 30 días
 });
 
 document.getElementById('btn-import').addEventListener('click', async function() {
