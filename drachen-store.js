@@ -435,12 +435,13 @@ window.onload = function() {
   });
 };
 
-const ctx = document.getElementById('movimientos-chart').getContext('2d');
 let chart;
 
 async function actualizarGraficoMovimientos() {
   const ventas = await getDatos('ventas');
   const gastos = await getDatos('gastos');
+
+  const ctx = document.getElementById('movimientos-chart').getContext('2d');
 
   const hoy = new Date();
   const limiteInferior = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 30);
