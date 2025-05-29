@@ -67,7 +67,8 @@ function validarFecha(fecha) {
 }
 
 function formatearFecha(fechaStr) {
-  const fecha = new Date(fechaStr);
+  const [year, month, day] = fechaStr.split('-').map(Number);
+  const fecha = new Date(year, month - 1, day);
   const dia = String(fecha.getDate()).padStart(2, '0');
   const mes = String(fecha.getMonth() + 1).padStart(2, '0');
   const anio = fecha.getFullYear();
