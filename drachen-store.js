@@ -435,16 +435,7 @@ window.onload = function() {
   });
 };
 
-let modoMensual = false;
 const ctx = document.getElementById('movimientos-chart').getContext('2d');
-let chart;
-
-document.getElementById('toggle-period').addEventListener('click', async () => {
-  modoMensual = !modoMensual;
-  document.getElementById('toggle-period').textContent = modoMensual ? 'Ver Semanal' : 'Ver Mensual';
-  actualizarGraficoMovimientos();
-});
-
 let chart;
 
 async function actualizarGraficoMovimientos() {
