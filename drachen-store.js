@@ -569,7 +569,7 @@ document.getElementById('btn-generar-comisiones').addEventListener('click', asyn
   }
 
   await agregarMultiples('gastos', pagosGenerados);
-  await agregarDato('gastos', { fecha, descripcion, monto });
+//  await agregarDato('gastos', { fecha, descripcion, monto });
   cargarGastos();
   actualizarDashboard();
   actualizarGraficoMovimientos();
