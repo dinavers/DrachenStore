@@ -437,13 +437,23 @@ window.onload = function() {
 
 let chart;
 
-async function actualizarGraficoMovimientos() {
+async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
   const ventas = await getDatos('ventas');
   const gastos = await getDatos('gastos');
 
   const hoy = new Date();
-  const limiteInferior = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 30);
-  const limiteSuperior = hoy;
+  let limiteInferior = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 30);
+  let limiteSuperior = hoy;
+
+  if (desdeStr) {
+    const [y, m, d] = desdeStr.split('-').map(Number);
+    limiteInferior = new Date(y, m - 1, d);
+  }
+
+  if (hastaStr) {
+    const [y, m, d] = hastaStr.split('-').map(Number);
+    limiteSuperior = new Date(y, m - 1, d);
+  }
 
   const ventasFiltradas = ventas.filter(v => {
     const [y, m, d] = v.fecha.split('-').map(Number);
