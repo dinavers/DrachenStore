@@ -445,16 +445,27 @@ document.getElementById('toggle-period').addEventListener('click', async () => {
   actualizarGraficoMovimientos();
 });
 
+let chart;
+
 async function actualizarGraficoMovimientos() {
   const ventas = await getDatos('ventas');
   const gastos = await getDatos('gastos');
 
   const hoy = new Date();
-  const limite = new Date();
-  limite.setDate(hoy.getDate() - (modoMensual ? 30 : 7));
+  const limiteInferior = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - 30);
+  const limiteSuperior = hoy;
 
-  const ventasFiltradas = ventas.filter(v => new Date(v.fecha) >= limite);
-  const gastosFiltradas = gastos.filter(g => new Date(g.fecha) >= limite);
+  const ventasFiltradas = ventas.filter(v => {
+    const [y, m, d] = v.fecha.split('-').map(Number);
+    const fecha = new Date(y, m - 1, d);
+    return fecha >= limiteInferior && fecha <= limiteSuperior;
+  });
+
+  const gastosFiltradas = gastos.filter(g => {
+    const [y, m, d] = g.fecha.split('-').map(Number);
+    const fecha = new Date(y, m - 1, d);
+    return fecha >= limiteInferior && fecha <= limiteSuperior;
+  });
 
   let totalOeste = 0, totalPuente = 0, totalSur = 0;
   ventasFiltradas.forEach(v => {
@@ -470,13 +481,14 @@ async function actualizarGraficoMovimientos() {
   const datos = {
     labels: ['Plaza Oeste', 'Puente Alto', 'Gran Avenida', 'Gastos', 'Ganancias'],
     datasets: [{
-      label: modoMensual ? 'Últimos 30 días' : 'Últimos 7 días',
+      label: 'Últimos 30 días',
       data: [totalOeste, totalPuente, totalSur, totalGastos, ganancia],
       backgroundColor: ['#4caf50', '#66bb6a', '#81c784', '#f44336', '#2196f3'],
       borderRadius: 5
     }]
   };
 
+  const ctx = document.getElementById('movimientos-chart').getContext('2d');
   if (chart) chart.destroy();
   chart = new Chart(ctx, {
     type: 'bar',
@@ -486,19 +498,16 @@ async function actualizarGraficoMovimientos() {
       plugins: {
         legend: { display: false },
         tooltip: {
-  callbacks: {
-    label: (ctx) => {
-      const valor = ctx.raw.toLocaleString('es-CL');
-      return `$${valor}`;
-    }
-  }
-}
+          callbacks: {
+            label: (ctx) => `$${ctx.raw.toLocaleString('es-CL')}`
+          }
+        }
       },
       scales: {
         y: {
           ticks: {
             color: '#fff',
-            callback: (val) => `$${val.toLocaleString('es-CL')}`
+            callback: val => `$${val.toLocaleString('es-CL')}`
           },
           beginAtZero: true
         },
@@ -509,10 +518,9 @@ async function actualizarGraficoMovimientos() {
     }
   });
 
-  const desde = limite.toLocaleDateString('es-CL');
-  const hasta = hoy.toLocaleDateString('es-CL');
+  const desde = limiteInferior.toLocaleDateString('es-CL');
+  const hasta = limiteSuperior.toLocaleDateString('es-CL');
   document.getElementById('rango-fechas').textContent = `Mostrando datos del ${desde} al ${hasta}`;
-
 }
 
 function calcularComision(monto) {
