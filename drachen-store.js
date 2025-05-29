@@ -438,6 +438,7 @@ window.onload = function() {
 let chart;
 
 async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
+  const ctx = document.getElementById('movimientos-chart').getContext('2d');
   const ventas = await getDatos('ventas');
   const gastos = await getDatos('gastos');
 
