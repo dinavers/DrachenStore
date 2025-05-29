@@ -439,6 +439,7 @@ let chart;
 
 async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
   const ctx = document.getElementById('movimientos-chart').getContext('2d');
+
   const ventas = await getDatos('ventas');
   const gastos = await getDatos('gastos');
 
@@ -450,7 +451,6 @@ async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
     const [y, m, d] = desdeStr.split('-').map(Number);
     limiteInferior = new Date(y, m - 1, d);
   }
-
   if (hastaStr) {
     const [y, m, d] = hastaStr.split('-').map(Number);
     limiteSuperior = new Date(y, m - 1, d);
@@ -482,14 +482,13 @@ async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
   const datos = {
     labels: ['Plaza Oeste', 'Puente Alto', 'Gran Avenida', 'Gastos', 'Ganancias'],
     datasets: [{
-      label: 'Últimos 30 días',
+      label: `Resumen`,
       data: [totalOeste, totalPuente, totalSur, totalGastos, ganancia],
       backgroundColor: ['#4caf50', '#66bb6a', '#81c784', '#f44336', '#2196f3'],
       borderRadius: 5
     }]
   };
 
-  ctx = document.getElementById('movimientos-chart').getContext('2d');
   if (chart) chart.destroy();
   chart = new Chart(ctx, {
     type: 'bar',
@@ -519,9 +518,9 @@ async function actualizarGraficoMovimientos(desdeStr = '', hastaStr = '') {
     }
   });
 
-  const desde = limiteInferior.toLocaleDateString('es-CL');
-  const hasta = limiteSuperior.toLocaleDateString('es-CL');
-  document.getElementById('rango-fechas').textContent = `Mostrando datos del ${desde} al ${hasta}`;
+  const desdeTexto = limiteInferior.toLocaleDateString('es-CL');
+  const hastaTexto = limiteSuperior.toLocaleDateString('es-CL');
+  document.getElementById('rango-fechas').textContent = `Mostrando datos del ${desdeTexto} al ${hastaTexto}`;
 }
 
 function calcularComision(monto) {
