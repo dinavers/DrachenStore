@@ -478,7 +478,7 @@ async function actualizarGraficoMovimientos() {
     }]
   };
 
-  const ctx = document.getElementById('movimientos-chart').getContext('2d');
+  ctx = document.getElementById('movimientos-chart').getContext('2d');
   if (chart) chart.destroy();
   chart = new Chart(ctx, {
     type: 'bar',
