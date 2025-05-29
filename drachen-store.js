@@ -157,7 +157,11 @@ function filtrarUltimosDias(data, dias) {
   if (dias === 0) return data;
   const fechaLimite = new Date();
   fechaLimite.setDate(fechaLimite.getDate() - dias);
-  return data.filter(d => new Date(d.fecha) >= fechaLimite);
+  return data.filter(d => {
+  const [y, m, d2] = d.fecha.split('-').map(Number);
+  const fecha = new Date(y, m - 1, d2); // evitar desfase de zona horaria
+  return fecha >= fechaLimite;
+});
 }
 
 async function cargarVentas() {
